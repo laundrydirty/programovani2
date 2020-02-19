@@ -1,4 +1,6 @@
+import json
 # geojson structure
+
 
 # object (type)
 class Object(object):
@@ -18,6 +20,10 @@ class Point(Geometry):
             super().__init__("Point",[x,y,z])
         else:
             super().__init__("Point", [x, y])
+    def to_json(self):
+        return {"type":"Point", "coordinates": self.coordinates}
+
+        # return '{{"type":"Point","coordinates":{}}}'.format(self.coordinates)
 
 # object (type) -> geometry (coordinates) -> linestring
 class LineString(Geometry):
@@ -36,11 +42,12 @@ class Feature(Object):
         self.properties = properties
         self.id = id
 
+        def to_json(self):
+            return
+
 
 # object (type) -> featurecollection (features)
 class FeatureCollection(Object):
-    def __init__(self,type=None,features=None):
-        super().__init__(type)
+    def __init__(self,features=None):
+        super().__init__("FeatureCollection")
         self.features = features
-
-p=Point(10,10)
