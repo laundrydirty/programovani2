@@ -1,0 +1,12 @@
+11:45 19.2.2020
+github: prg2_19
+
+OOP-OBJEKTIVNÌ ORIENTIOVANÉ PROGRAMOVÁNÍ
+využití metod (ekvivalent funkce), voláme na objektech 
+hiearchie: tøída (obecnì popisuje charakteristiky, ale neøiká nic o konkrétních hodnotách)
+		-> objekt (uvnitø nìho držíme atributy)
+built-in exceptions - python documentation
+
+
+oop.py
+geojson_oop.py
