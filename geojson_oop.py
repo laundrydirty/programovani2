@@ -38,6 +38,21 @@ class LineString(Geometry):
 
 # object (type) -> feature (geometry,properties,id)
 class Feature(Object):
+    @classmethod
+    def from_json(cls,adict):
+        properties = adict["properties"]
+        geometry=Geometry.from_json(adict["geometry"])
+
+        feature_objs = []
+        for fdict in adict ["features"]:
+            fobj=Feature.from_json(fdict)
+            feature_objs.append(fobj)
+
+        obj=cls(geometry,properties) #ekvivalentni FeatureCollection(feature_objs)
+        return obj
+
+
+
     def __init__(self,geometry=None,properties=None,id=None):
         super().__init__("Feature")
         # je objekt istanic tridy?
@@ -56,6 +71,15 @@ class Feature(Object):
 
 # object (type) -> featurecollection (features)
 class FeatureCollection(Object):
+    @classmethod
+    def from_json(cls,adict):
+        feature_objs = []
+        for fdict in adict ["features"]:
+            fobj=Feature.from_json(fdict)
+            feature_objs.append(fobj)
+        obj=cls(feature_objs) #ekvivalentni FeatureCollection(feature_objs)
+        return obj
+
     def __init__(self,features=None):
         super().__init__("FeatureCollection")
         self.features = features
@@ -72,3 +96,21 @@ f = Feature(p,{"test":"value"})
 print(json.dumps(f.to_json()))
 print(f.geometry.coordinates)
 
+
+def form_json(adict):
+    if adict["type"] == "FeatureCollection":
+        FeatureCollection.from_json(addict)
+    elif adict["type"] == "Feature":
+        Feature.from_json(addict)
+    elif adict["type"] == "Point":
+       Point.from_json(addict)
+    else:
+        print("Unknown type {}".format(adict["type"]))
+
+    #zjisti co je to zac
+    #vytvori objektovou hierchii
+    #vrati korenovy element {feature/featurecollection/geometery)
+
+with open("mpp.json") as f:
+    adict=json.load(f)
+    print(adict)
