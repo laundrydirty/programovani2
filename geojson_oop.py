@@ -28,7 +28,10 @@ class Point(Geometry):
 # object (type) -> geometry (coordinates) -> linestring
 class LineString(Geometry):
     def __init__(self, type=None, coordinates=None):
-        super().__init__(type,coordinates)
+        super().__init__("LineString",coordinates)
+
+    def to_json(self):
+        return {"type": "LineString", "coordinates": self.coordinates}
 
 
 # object (type) -> feature (geometry,properties,id)
@@ -39,15 +42,27 @@ class Feature(Object):
         if not isinstance(geometry, Geometry):
             raise ValueError ("Attempted to insert A non Geometry as a geometry")
         self.geometry = geometry
+        if id:
+            self.id = id
         self.properties = properties
-        self.id = id
 
-        def to_json(self):
-            return
-
+    def to_json(self):
+        return {"type": "Feature", "geometry": self.geometry.to_json(),
+                "properties": self.properties}
 
 # object (type) -> featurecollection (features)
 class FeatureCollection(Object):
     def __init__(self,features=None):
         super().__init__("FeatureCollection")
         self.features = features
+
+    def to_json(self):
+        features = [f.to_json() for f in self.features]
+        return {"type": "FeatureCollection", "features": features}
+
+
+p = Point(10,10)
+print(json.dumps(p.to_json()))
+f = Feature(p,{"test":"value"})
+print(json.dumps(f.to_json()))
+print(f.geometry.coordinates)
